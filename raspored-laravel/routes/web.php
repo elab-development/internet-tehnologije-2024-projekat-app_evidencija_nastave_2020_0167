@@ -44,6 +44,24 @@ Route::prefix('api')->group(function () {
             'user_schedules_count' => $user->schedules()->count()
         ]);
     });
+
+    //testiranje seedera
+    Route::get('/test-seeders', function () {
+        $users = \App\Models\User::with('schedules.subject')->get();
+        $subjects = \App\Models\Subject::all();
+        $holidays = \App\Models\Holiday::all();
+        
+        return response()->json([
+            'message' => 'Seeders working perfectly!',
+            'users_count' => $users->count(),
+            'subjects_count' => $subjects->count(),
+            'holidays_count' => $holidays->count(),
+            'admin' => \App\Models\User::where('role', 'admin')->first()->name,
+            'first_student' => $users->where('role', 'student')->first()->name,
+            'first_subject' => $subjects->first()->name,
+            'schedules_count' => \App\Models\Schedule::count()
+        ]);
+    });
     
     Route::get('/test', function () {
         return response()->json([
