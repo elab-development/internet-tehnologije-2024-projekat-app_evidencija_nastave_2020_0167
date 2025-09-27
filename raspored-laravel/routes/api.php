@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AttendanceController; 
 
 // test rute
 Route::get('/test', function () {
@@ -42,6 +43,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/schedules', [App\Http\Controllers\ScheduleController::class, 'store']);
         Route::put('/schedules/{id}', [App\Http\Controllers\ScheduleController::class, 'update']);
         Route::delete('/schedules/{id}', [App\Http\Controllers\ScheduleController::class, 'destroy']);
+
+        Route::get('/attendance/all', [AttendanceController::class, 'getAllAttendance']);
+        Route::get('/attendance/stats', [AttendanceController::class, 'attendanceStats']);
+   
     
         return response()->json([
             'message' => 'Admin dashboard',
@@ -51,6 +56,10 @@ Route::middleware('auth:sanctum')->group(function () {
     
     // student
     Route::middleware('role:student')->get('/student/schedule', function (Request $request) {
+        Route::post('/attendance/check-in', [AttendanceController::class, 'checkIn']);
+        Route::get('/attendance/my-attendance', [AttendanceController::class, 'myAttendance']);
+        Route::get('/attendance/today-classes', [AttendanceController::class, 'todayClasses']);
+  
         $schedules = $request->user()->schedules()->with('subject')->get();
         return response()->json([
             'message' => 'Your schedule',
@@ -66,4 +75,38 @@ Route::middleware('auth:sanctum')->group(function () {
             'schedules' => $schedules
         ]);
     });
+});
+
+
+Route::get('/test-attendance', function () {
+    $schedules = \App\Models\Schedule::with(['user', 'subject'])->take(5)->get();
+    $attendances = [];
+    
+    foreach ($schedules as $schedule) {
+        for ($i = 0; $i < 3; $i++) {
+            $date = \Carbon\Carbon::now()->subWeeks($i)->startOfWeek();
+            
+            $classDays = [
+                'Monday' => 1, 'Tuesday' => 2, 'Wednesday' => 3, 
+                'Thursday' => 4, 'Friday' => 5, 'Saturday' => 6, 'Sunday' => 0
+            ];
+            
+            $classDate = $date->copy()->addDays($classDays[$schedule->day_of_week]);
+            
+            $attendance = \App\Models\Attendance::create([
+                'user_id' => $schedule->user_id,
+                'schedule_id' => $schedule->id,
+                'date' => $classDate->toDateString(),
+                'is_present' => rand(0, 10) > 2 
+            ]);
+            
+            $attendances[] = $attendance;
+        }
+    }
+    
+    return response()->json([
+        'message' => 'Test attendance data created',
+        'attendance_records' => count($attendances),
+        'sample_data' => $attendances
+    ]);
 });
