@@ -31,9 +31,18 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
+
+    Route::get('/schedules', [App\Http\Controllers\ScheduleController::class, 'index']);
+    Route::get('/schedules/{id}', [App\Http\Controllers\ScheduleController::class, 'show']);
+    Route::get('/schedules/day/{day}', [App\Http\Controllers\ScheduleController::class, 'getByDay']);
+    
     
     // sdmin
     Route::middleware('role:admin')->get('/admin/dashboard', function () {
+        Route::post('/schedules', [App\Http\Controllers\ScheduleController::class, 'store']);
+        Route::put('/schedules/{id}', [App\Http\Controllers\ScheduleController::class, 'update']);
+        Route::delete('/schedules/{id}', [App\Http\Controllers\ScheduleController::class, 'destroy']);
+    
         return response()->json([
             'message' => 'Admin dashboard',
             'users_count' => \App\Models\User::count()

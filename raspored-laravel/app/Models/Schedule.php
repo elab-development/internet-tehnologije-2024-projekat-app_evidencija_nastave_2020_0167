@@ -32,4 +32,22 @@ class Schedule extends Model
     {
         return $this->hasMany(Attendance::class);
     }
+    
+    public function scopeForDay($query, $day)
+    {
+        return $query->where('day_of_week', $day);
+    }
+
+    public function scopeAtTime($query, $startTime, $endTime)
+    {
+        return $query->where('start_time', '>=', $startTime)
+                     ->where('end_time', '<=', $endTime);
+    }
+
+    public function getDurationAttribute()
+    {
+        $start = \Carbon\Carbon::parse($this->start_time);
+        $end = \Carbon\Carbon::parse($this->end_time);
+        return $start->diffInMinutes($end);
+    }
 }
