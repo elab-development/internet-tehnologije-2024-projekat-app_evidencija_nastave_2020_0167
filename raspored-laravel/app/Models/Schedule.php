@@ -17,4 +17,19 @@ class Schedule extends Model
         'end_time',
         'classroom',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function subject()
+    {
+        return $this->belongsTo(Subject::class);
+    }
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
 }

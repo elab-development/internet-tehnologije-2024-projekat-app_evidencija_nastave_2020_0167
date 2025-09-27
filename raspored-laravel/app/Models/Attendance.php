@@ -20,4 +20,14 @@ class Attendance extends Model
         'date' => 'date',
         'is_present' => 'boolean',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function schedule()
+    {
+        return $this->belongsTo(Schedule::class);
+    }
 }

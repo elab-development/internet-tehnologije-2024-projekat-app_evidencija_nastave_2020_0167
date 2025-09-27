@@ -18,6 +18,8 @@ return new class extends Migration
             $table->date('date');
             $table->boolean('is_present')->default(false);
             $table->timestamps();
+
+            $table->unique(['user_id', 'schedule_id', 'date']);
         });
     }
 

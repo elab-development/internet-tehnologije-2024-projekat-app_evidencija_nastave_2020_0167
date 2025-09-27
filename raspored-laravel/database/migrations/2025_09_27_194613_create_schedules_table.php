@@ -20,6 +20,8 @@ return new class extends Migration
             $table->time('end_time');
             $table->string('classroom');
             $table->timestamps();
+
+            $table->index(['user_id', 'day_of_week']);
         });
     }
 

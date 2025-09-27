@@ -15,4 +15,9 @@ class Subject extends Model
         'credits',
         'semester',
     ];
+
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class);
+    }
 }
