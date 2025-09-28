@@ -3,7 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\AttendanceController; 
+use App\Http\Controllers\Api\AttendanceController; 
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\SubjectController;
 
 // test rute
 Route::get('/test', function () {
@@ -29,53 +31,53 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 // zasticene rute
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/user', [AuthController::class, 'user']);
-
-    Route::get('/schedules', [App\Http\Controllers\ScheduleController::class, 'index']);
-    Route::get('/schedules/{id}', [App\Http\Controllers\ScheduleController::class, 'show']);
-    Route::get('/schedules/day/{day}', [App\Http\Controllers\ScheduleController::class, 'getByDay']);
-    
-    
-    // sdmin
-    Route::middleware('role:admin')->get('/admin/dashboard', function () {
-        Route::post('/schedules', [App\Http\Controllers\ScheduleController::class, 'store']);
-        Route::put('/schedules/{id}', [App\Http\Controllers\ScheduleController::class, 'update']);
-        Route::delete('/schedules/{id}', [App\Http\Controllers\ScheduleController::class, 'destroy']);
-
-        Route::get('/attendance/all', [AttendanceController::class, 'getAllAttendance']);
-        Route::get('/attendance/stats', [AttendanceController::class, 'attendanceStats']);
-   
-    
-        return response()->json([
-            'message' => 'Admin dashboard',
-            'users_count' => \App\Models\User::count()
-        ]);
-    });
-    
-    // student
-    Route::middleware('role:student')->get('/student/schedule', function (Request $request) {
-        Route::post('/attendance/check-in', [AttendanceController::class, 'checkIn']);
-        Route::get('/attendance/my-attendance', [AttendanceController::class, 'myAttendance']);
-        Route::get('/attendance/today-classes', [AttendanceController::class, 'todayClasses']);
-  
+//STUDENT
+Route::middleware(['auth:sanctum', 'role:student'])->prefix('student')->group(function () {
+    Route::get('/schedule', function (Request $request) {
         $schedules = $request->user()->schedules()->with('subject')->get();
         return response()->json([
             'message' => 'Your schedule',
             'schedules' => $schedules
         ]);
     });
-    
-    // gost + student
-    Route::middleware('role:guest,student')->get('/schedule/public', function () {
-        $schedules = \App\Models\Schedule::with(['user', 'subject'])->get();
+
+    Route::post('/attendance/check-in', [AttendanceController::class, 'checkIn']);
+    Route::get('/attendance/my-attendance', [AttendanceController::class, 'myAttendance']);
+    Route::get('/attendance/today-classes', [AttendanceController::class, 'todayClasses']);
+});
+
+
+//ADMIN
+Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', function () {
         return response()->json([
-            'message' => 'Public schedules',
-            'schedules' => $schedules
+            'message' => 'Admin dashboard',
+            'users_count' => \App\Models\User::count()
         ]);
     });
+
+    Route::post('/schedules', [App\Http\Controllers\ScheduleController::class, 'store']);
+    Route::put('/schedules/{id}', [App\Http\Controllers\ScheduleController::class, 'update']);
+    Route::delete('/schedules/{id}', [App\Http\Controllers\ScheduleController::class, 'destroy']);
+
+    Route::get('/attendance/all', [AttendanceController::class, 'getAllAttendance']);
+    Route::get('/attendance/stats', [AttendanceController::class, 'attendanceStats']);
+
+    Route::get('/users', [UserController::class, 'index']);
+    Route::post('/users', [UserController::class, 'store']);
+    Route::get('/users/{id}', [UserController::class, 'show']);
+    Route::put('/users/{id}', [UserController::class, 'update']);
+    Route::delete('/users/{id}', [UserController::class, 'destroy']);
+    Route::get('/users-stats', [UserController::class, 'stats']);
+
+    Route::get('/subjects', [SubjectController::class, 'index']);
+    Route::post('/subjects', [SubjectController::class, 'store']);
+    Route::get('/subjects/{id}', [SubjectController::class, 'show']);
+    Route::put('/subjects/{id}', [SubjectController::class, 'update']);
+    Route::delete('/subjects/{id}', [SubjectController::class, 'destroy']);
+    Route::get('/subjects-by-semester', [SubjectController::class, 'bySemester']);
 });
+
 
 
 Route::get('/test-attendance', function () {

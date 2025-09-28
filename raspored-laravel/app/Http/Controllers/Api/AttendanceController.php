@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Models\Attendance;
 use App\Models\Schedule;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Http\Controllers\Controller;
 
 class AttendanceController extends Controller
 {
