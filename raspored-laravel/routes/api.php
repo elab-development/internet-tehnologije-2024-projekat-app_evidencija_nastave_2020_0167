@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\Api\AttendanceController; 
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\SubjectController;
@@ -38,6 +40,12 @@ Route::middleware(['auth:sanctum', 'role:student'])->prefix('student')->group(fu
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/password/change', [AuthController::class, 'changePassword']);
+
+    Route::get('/profile', [ProfileController::class, 'show']);
+    Route::put('/profile', [ProfileController::class, 'update']);
+    Route::post('/profile/image', [ProfileController::class, 'uploadImage']);
+    Route::delete('/profile/image', [ProfileController::class, 'deleteImage']);
+
     
 
     Route::get('/schedule', function (Request $request) {
@@ -59,6 +67,12 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin')->group(functi
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/password/change', [AuthController::class, 'changePassword']);
+
+    Route::get('/profile', [ProfileController::class, 'show']);
+    Route::put('/profile', [ProfileController::class, 'update']);
+    Route::post('/profile/image', [ProfileController::class, 'uploadImage']);
+    Route::delete('/profile/image', [ProfileController::class, 'deleteImage']);
+
     
     Route::get('/dashboard', function () {
         return response()->json([
