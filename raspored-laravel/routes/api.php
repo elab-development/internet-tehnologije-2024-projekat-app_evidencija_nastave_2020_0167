@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\Api\AttendanceController; 
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\SubjectController;
@@ -46,7 +47,8 @@ Route::middleware(['auth:sanctum', 'role:student'])->prefix('student')->group(fu
     Route::post('/profile/image', [ProfileController::class, 'uploadImage']);
     Route::delete('/profile/image', [ProfileController::class, 'deleteImage']);
 
-    
+    Route::get('/calendar-export', [CalendarController::class, 'exportSchedule']);
+
 
     Route::get('/schedule', function (Request $request) {
         $schedules = $request->user()->schedules()->with('subject')->get();
