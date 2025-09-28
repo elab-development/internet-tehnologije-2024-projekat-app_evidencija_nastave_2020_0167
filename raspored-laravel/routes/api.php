@@ -29,10 +29,17 @@ Route::get('/test-seeders', function () {
 // javne rute
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/password/reset-request', [AuthController::class, 'requestPasswordReset']);
+Route::post('/password/reset', [AuthController::class, 'resetPassword']);
 
 // zasticene rute
 //STUDENT
 Route::middleware(['auth:sanctum', 'role:student'])->prefix('student')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/user', [AuthController::class, 'user']);
+    Route::post('/password/change', [AuthController::class, 'changePassword']);
+    
+
     Route::get('/schedule', function (Request $request) {
         $schedules = $request->user()->schedules()->with('subject')->get();
         return response()->json([
@@ -49,6 +56,10 @@ Route::middleware(['auth:sanctum', 'role:student'])->prefix('student')->group(fu
 
 //ADMIN
 Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/user', [AuthController::class, 'user']);
+    Route::post('/password/change', [AuthController::class, 'changePassword']);
+    
     Route::get('/dashboard', function () {
         return response()->json([
             'message' => 'Admin dashboard',
