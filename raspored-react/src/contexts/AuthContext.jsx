@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { authService } from '../services/auth.service';
 
 const AuthContext = createContext();
@@ -13,21 +13,26 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [token, setToken] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const savedToken = localStorage.getItem('token');
+    const savedUser = localStorage.getItem('user');
+    
+    if (savedToken && savedUser) {
+      setToken(savedToken);
+      setUser(JSON.parse(savedUser));
+    }
+    setLoading(false);
+  }, []);
 
   const login = async (email, password) => {
     const response = await authService.login(email, password);
     setToken(response.token);
     setUser(response.user);
     localStorage.setItem('token', response.token);
-    return response;
-  };
-
-  const register = async (userData) => {
-    const response = await authService.register(userData);
-    setToken(response.token);
-    setUser(response.user);
-    localStorage.setItem('token', response.token);
+    localStorage.setItem('user', JSON.stringify(response.user));
     return response;
   };
 
@@ -35,15 +40,16 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     setToken(null);
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
   };
 
   const value = {
     user,
     token,
     login,
-    register,
     logout,
-    isAuthenticated: !!user,
+    loading,
+    isAuthenticated: !!user && !!token,
     isAdmin: user?.role === 'admin',
     isStudent: user?.role === 'student',
     isGuest: user?.role === 'guest'
