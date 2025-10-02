@@ -4,6 +4,7 @@ import Layout from '../components/layout/Layout';
 import Card from '../components/common/Card';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import api from '../services/api';
+import Button from '../components/common/Button';
 
 const StudentDashboardPage = () => {
   const { user } = useAuth();
@@ -28,9 +29,34 @@ const StudentDashboardPage = () => {
 
   if (loading) return <LoadingSpinner />;
 
+  const handleExportCalendar = async () => {
+    try {
+      const response = await api.get('/student/calendar-export', {
+        responseType: 'blob' 
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'raspored.ics');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      alert('Greška pri preuzimanju kalendara');
+      console.error(error);
+    }
+  };
+
   return (
     <Layout>
       <h1 className="text-3xl font-bold mb-6">Student: {user?.name}!</h1>
+
+      <div className="mb-6">
+        <Button onClick={handleExportCalendar}>
+          Preuzmi raspored (Google Calendar)
+        </Button>
+      </div>
 
       <div className="space-y-4">
         {schedule.map(item => (
