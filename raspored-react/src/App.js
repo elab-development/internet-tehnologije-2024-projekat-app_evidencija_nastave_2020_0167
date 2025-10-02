@@ -13,6 +13,7 @@ import AdminDashboardPage from './pages/AdminDashboardPage';
 import AdminUsersPage from './pages/AdminUsersPage';
 import AdminSubjectsPage from './pages/AdminSubjectsPage';
 import AdminStatsPage from './pages/AdminStatsPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
 
 function HomePage() {
   return (
@@ -95,6 +96,10 @@ function App() {
                 <AdminStatsPage />
               </ProtectedRoute>
             } 
+          />
+          <Route 
+            path="/forgot-password" 
+            element={<ForgotPasswordPage />}
           />
         </Routes>
       </Router>

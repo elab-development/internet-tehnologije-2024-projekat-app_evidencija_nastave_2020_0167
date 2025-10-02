@@ -6,6 +6,7 @@ import Card from '../components/common/Card';
 import InputField from '../components/common/InputField';
 import Button from '../components/common/Button';
 import { LogIn } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -78,6 +79,12 @@ const LoginPage = () => {
               Prijavi se
             </Button>
           </form>
+
+          <div className="mt-4 text-center">
+            <Link to="/forgot-password" className="text-sm text-orange-600 hover:underline">
+              Zaboravili ste lozinku?
+            </Link>
+          </div>
 
           <div className="mt-6 text-center">
             <p className="text-gray-600">
