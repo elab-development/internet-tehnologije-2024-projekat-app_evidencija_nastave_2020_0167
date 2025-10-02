@@ -1,24 +1,45 @@
 import React from 'react';
-import { ChevronRight } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { ChevronRight, Home } from 'lucide-react';
 
-const Breadcrumbs = ({ items }) => {
+const Breadcrumbs = () => {
+  const location = useLocation();
+  const pathnames = location.pathname.split('/').filter(x => x);
+
+  const breadcrumbNameMap = {
+    'admin': 'Dashboard',
+    'student': 'Dashboard',
+    'guest': 'Dashboard',
+    'users': 'Korisnici',
+    'subjects': 'Predmeti',
+    'profile': 'Profil',
+    'dashboard': 'Dashboard'
+  };
+
   return (
-    <nav className="flex items-center gap-2 text-sm text-gray-600 mb-6">
-      {items.map((item, index) => (
-        <React.Fragment key={index}>
-          {index > 0 && <ChevronRight size={16} className="text-pink-300" />}
-          {item.path ? (
-            <a 
-              href={item.path}
-              className="hover:text-orange-600 transition-colors"
-            >
-              {item.label}
-            </a>
-          ) : (
-            <span className="text-orange-600 font-medium">{item.label}</span>
-          )}
-        </React.Fragment>
-      ))}
+    <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-4">
+      <Link to="/" className="hover:text-orange-600 flex items-center">
+        <Home size={16} />
+      </Link>
+      
+      {pathnames.map((value, index) => {
+        const to = `/${pathnames.slice(0, index + 1).join('/')}`;
+        const isLast = index === pathnames.length - 1;
+        const displayName = breadcrumbNameMap[value] || value;
+
+        return (
+          <React.Fragment key={to}>
+            <ChevronRight size={16} className="text-gray-400" />
+            {isLast ? (
+              <span className="text-orange-600 font-medium">{displayName}</span>
+            ) : (
+              <Link to={to} className="hover:text-orange-600">
+                {displayName}
+              </Link>
+            )}
+          </React.Fragment>
+        );
+      })}
     </nav>
   );
 };
