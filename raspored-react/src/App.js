@@ -11,6 +11,7 @@ import ProfilePage from './pages/ProfilePage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 import AdminUsersPage from './pages/AdminUsersPage';
+import AdminSubjectsPage from './pages/AdminSubjectsPage';
 //import { Calendar, Users, BookOpen } from 'lucide-react';
 
 function HomePage() {
@@ -76,6 +77,14 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['admin']}>
                 <AdminUsersPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/subjects" 
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminSubjectsPage />
               </ProtectedRoute>
             } 
           />
