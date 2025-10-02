@@ -50,6 +50,7 @@ class AttendanceController extends Controller
             ]
         ]);
     }
+    
 
     public function myAttendance(Request $request)
     {
@@ -106,7 +107,7 @@ class AttendanceController extends Controller
         ]);
     }
 
-    public function attendanceStats(Request $request)
+    /* public function attendanceStats(Request $request)
     {
         $subjectStats = Attendance::join('schedules', 'attendances.schedule_id', '=', 'schedules.id')
             ->join('subjects', 'schedules.subject_id', '=', 'subjects.id')
@@ -143,7 +144,31 @@ class AttendanceController extends Controller
                 'average_attendance' => round($studentStats->avg('attendance_percentage'), 2)
             ]
         ]);
-    }
+    } */
+
+        public function attendanceStats()
+        {
+            $stats = [
+                'total_attendance' => \App\Models\Attendance::count(),
+                'total_present' => \App\Models\Attendance::where('is_present', true)->count(),
+                'total_absent' => \App\Models\Attendance::where('is_present', false)->count(),
+                'by_user' => \App\Models\Attendance::select('user_id')
+                    ->selectRaw('SUM(CASE WHEN is_present = 1 THEN 1 ELSE 0 END) as present_count')
+                    ->selectRaw('SUM(CASE WHEN is_present = 0 THEN 1 ELSE 0 END) as absent_count')
+                    ->with('user:id,name')
+                    ->groupBy('user_id')
+                    ->get()
+                    ->map(function($item) {
+                        return [
+                            'user_name' => $item->user->name,
+                            'present_count' => $item->present_count,
+                            'absent_count' => $item->absent_count
+                        ];
+                    })
+            ];
+
+            return response()->json(['data' => $stats]);
+        }
 
     public function todayClasses(Request $request)
     {

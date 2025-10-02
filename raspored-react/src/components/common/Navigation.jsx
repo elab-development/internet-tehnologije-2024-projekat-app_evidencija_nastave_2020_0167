@@ -21,7 +21,8 @@ const Navigation = () => {
       { path: '/admin', label: 'Dashboard', icon: BarChart },
       { path: '/admin/users', label: 'Korisnici', icon: Users },
       { path: '/admin/subjects', label: 'Predmeti', icon: BookOpen },
-      { path: '/profile', label: 'Profil', icon: User }
+      { path: '/profile', label: 'Profil', icon: User },
+      { path: '/admin/stats', label: 'Statistika', icon: BarChart}
     );
   }
 

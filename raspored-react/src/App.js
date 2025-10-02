@@ -12,6 +12,7 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 import AdminUsersPage from './pages/AdminUsersPage';
 import AdminSubjectsPage from './pages/AdminSubjectsPage';
+import AdminStatsPage from './pages/AdminStatsPage';
 
 function HomePage() {
   return (
@@ -84,6 +85,14 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['admin']}>
                 <AdminSubjectsPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/stats" 
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminStatsPage />
               </ProtectedRoute>
             } 
           />

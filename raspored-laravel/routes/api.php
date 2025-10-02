@@ -103,6 +103,8 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin')->group(functi
     Route::put('/subjects/{id}', [SubjectController::class, 'update']);
     Route::delete('/subjects/{id}', [SubjectController::class, 'destroy']);
     Route::get('/subjects-by-semester', [SubjectController::class, 'bySemester']);
+
+    Route::get('/attendance/stats', [AttendanceController::class, 'attendanceStats']);
 });
 
 

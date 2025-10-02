@@ -5,7 +5,7 @@ import { Calendar, Users, BookOpen, Settings, BarChart } from 'lucide-react';
 const Sidebar = () => {
   const { isAdmin, isStudent } = useAuth();
 
-  const studentLinks = [
+  /* const studentLinks = [
     { label: 'Moj Raspored', icon: Calendar, path: '/student' },
     { label: 'Prisustvo', icon: BarChart, path: '/student/attendance' },
     { label: 'Podešavanja', icon: Settings, path: '/profile' },
@@ -16,7 +16,8 @@ const Sidebar = () => {
     { label: 'Korisnici', icon: Users, path: '/admin/users' },
     { label: 'Predmeti', icon: BookOpen, path: '/admin/subjects' },
     { label: 'Raspored', icon: Calendar, path: '/admin/schedules' },
-  ];
+    { label: 'Statistika', icon: BarChart, path: '/admin/stats' }
+  ]; */
 
   const links = isAdmin ? adminLinks : isStudent ? studentLinks : [];
 
