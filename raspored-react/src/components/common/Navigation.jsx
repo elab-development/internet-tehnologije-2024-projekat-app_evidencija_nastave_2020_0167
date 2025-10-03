@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { Home, Calendar, User, Users, BookOpen, BarChart } from 'lucide-react';
+import { Home, Calendar, User, Users, BookOpen, BarChart, CheckCircle } from 'lucide-react';
 
 const Navigation = () => {
   const { isAuthenticated, isAdmin, isStudent, isGuest } = useAuth();
@@ -12,7 +12,8 @@ const Navigation = () => {
   if (isStudent) {
     navItems.push(
       { path: '/student', label: 'Moj Raspored', icon: Calendar },
-      { path: '/profile', label: 'Profil', icon: User }
+      { path: '/profile', label: 'Profil', icon: User },
+      { path: '/student/attendance', label: 'Prisustvo', icon: CheckCircle}
     );
   }
 

@@ -14,6 +14,7 @@ import AdminUsersPage from './pages/AdminUsersPage';
 import AdminSubjectsPage from './pages/AdminSubjectsPage';
 import AdminStatsPage from './pages/AdminStatsPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import StudentAttendancePage from './pages/StudentAttendancePage';
 
 function HomePage() {
   return (
@@ -100,6 +101,14 @@ function App() {
           <Route 
             path="/forgot-password" 
             element={<ForgotPasswordPage />}
+          />
+          <Route 
+            path="/student/attendance" 
+            element={
+              <ProtectedRoute allowedRoles={['student']}>
+                <StudentAttendancePage />
+              </ProtectedRoute>
+            } 
           />
         </Routes>
       </Router>
