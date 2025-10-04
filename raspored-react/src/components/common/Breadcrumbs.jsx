@@ -15,6 +15,7 @@ const Breadcrumbs = () => {
     'profile': 'Profil',
     'dashboard': 'Dashboard'
   };
+  //komentar
 
   return (
     <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-4">
